@@ -2,6 +2,141 @@
 <?php echo $this->extend('\Modules\Master\Views\master') ?>
 <?php echo $this->section('content') ?>
 
+
+<!-- new design -->
+<div class="card">
+			<div class="card-body table-responsive">
+				<div class="d-flex flex-wrap gap-2 align-items-center mb-4 header_title">
+					<h5 class="m-0">Income  <span> Histories </span>  </h5>
+					<div class="ms-auto d-flex flex-wrap gap-2"> 
+						<div id="tableActions" class="d-inline-flex gap-3"></div>
+						<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addIncome"><i class="ri-equalizer-fill"></i> Add   Income</button> 
+					</div> 
+				</div>
+	 	 
+				<table id="IncomeTable" class="table table-striped" style="width:100%">
+	        <thead>
+	            <tr>  	 
+	                <th>User name</th>   
+	                <th>Account number</th>   
+	                <th>Category</th>   
+	                <th>Amount</th>   
+	                <th>Attachment</th>      
+	                <th>Description</th>      
+	                <th>Date</th>      
+	                <th>Action</th>
+	            </tr>
+	        </thead>
+        	<tbody>
+            <?php foreach($data as $value):?>
+            <tr>
+              <td><?=$username?></td>
+              <td><?=$value['account_number']?></td>
+              <td><?= $value['categoryName']?></td>
+              <td><?= $value['amount']?></td>
+              <td> <a href="<?php echo base_url('Modules/IncomeModule/incomeuploads/'. $value['attachment']); ?>" download class="btn btn-success btn-sm"> <i class="ri-download-line"></i> </a> </td>
+              <td><?= $value['description']?></td>
+              <td><?= $value['date']?> </td>
+              
+              <td> 
+              	<div class="d-flex gap-2">
+              		<a href="<?php echo base_url('admin/editincome/'.$value['incomeId'])?>" class="btn btn-sm btn-primary edit" value="<?= $value['incomeId']?>"> <i class="ri-edit-2-line"></i> </a>
+              		<a href="<?php echo base_url('admin/deleteincome/'.$value['incomeId'])?>" class="btn btn-sm btn-danger delete" value="<?= $value['incomeId']?>"><i class="ri-delete-bin-line"></i></a>
+              	</div>
+              </td>
+            </tr> 
+            <?php endforeach?>
+          </tbody>
+        </table>
+			</div>
+		</div>
+	 
+</div> 
+ 
+
+<!-- add students -->
+<div class="modal fade right" id="addIncome" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"> New Bank Account    </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">   
+     		<div class="row">
+     		
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control" id="floatingstatus" aria-label="From Account">
+						    <option selected> select  Income Category</option>
+						    <option value="1">UBC</option>
+						    <option value="2">Abc</option> 
+						  </select>
+						  <label for="floatingstatus"> Income Category</label>
+						</div>
+					</div> 
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control" id="floatingstatus" aria-label="To Account ID">
+						    <option selected>     Select Bank Account </option>
+						    <option value="1">UBC</option>
+						    <option value="2">Abc</option> 
+						  </select>
+						  <label for="floatingstatus"> Select Bank Account </label>
+						</div>
+					</div>  
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" class="form-control" placeholder="Amount">
+						  <label for="floatingSelect">Amount</label>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" class="form-control" placeholder="Reference">
+						  <label for="floatingSelect">Reference </label>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" class="form-control" placeholder="Description">
+						  <label for="floatingSelect">Description </label>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <textarea class="form-control" placeholder="Type Note"></textarea>
+						  <label for="floatingSelect">Note:</label>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="file" class="form-control" placeholder="Date">
+						  <label for="floatingSelect"> Add Attachment  </label>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" class="form-control" placeholder="Date">
+						  <label for="floatingSelect"> Date  </label>
+						</div>
+					</div>
+					 
+     		</div>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- end new design -->
+
+
+
+
+
 <div class="page-content">
     <div class="container-fluid"> 
 
