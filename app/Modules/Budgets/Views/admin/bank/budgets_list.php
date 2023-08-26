@@ -1,220 +1,178 @@
 <?= $this->extend('\Modules\Master\Views\master') ?>
 <?= $this->section('content') ?>
 
+<!-- new design -->
+<div class="card">
+			<div class="card-body table-responsive">
+				<div class="d-flex flex-wrap gap-2 align-items-center mb-4 header_title">
+					<h5 class="m-0">Budgets     </h5>
+					<div class="ms-auto d-flex flex-wrap gap-2"> 
+					 
+						<button class="btn btn-sm btn-primary" id="openModalBtn" ><i class="ri-equalizer-fill"></i> Add Budgets</button> 
+					</div> 
+				</div>
+	 	 
+				<table id="datatable" class="table table-striped" style="width:100%">
+	        <thead>
+	            <tr>  	 
+	                <th>Budget name</th>   
+	                <th>Proposed amount</th>   
+	                <th>Updated budget amount</th>   
+	                <th>Budget start date</th>   
+	                <th>Budget end date</th> 
+	                <th>Action</th>
+	            </tr>
+	        </thead>
+        	<tbody>
+            <?php foreach ($budgetslist as $value): ?>    
+            <tr>
+              <td><?= $value['budget_name']?></td>
+              <td><?= ($value['update_amount'] != '')?$value['update_amount']:$value['budget_amount']?></td>
+              <td><?= $value['budget_amount']?> </td>
+              <td><?= $value['start_date']?>  </td> 
+              <td><?= $value['end_date']?></td>
+              
+              <td> 
+              	<div class="d-flex gap-2">
+              		<a href="javascript:;" class="btn btn-sm btn-primary editButton" data-id="<?php echo $value['id']; ?>"> <i class="ri-edit-2-line"></i> </a>
+              		<a href="javascript:;" class="btn btn-sm btn-danger Deletebtn" data-id="<?php echo $value['id']; ?>"><i class="ri-delete-bin-line"></i></a>
+              	</div>
+              </td>
+            </tr> 
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+			</div>
+		</div>
+	 
+</div> 
+ 
 
-
-<!-- For New Budgets modal -->
-
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add New Budget</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="myForm">
-                    <div class="form-group">
-                        <label for="budgetName">Budget Name:</label>
-                        <input type="text" class="form-control" id="budgetName" name="budgetName" placeholder="budget Name..">
-                        <span style="color:red;" id="budErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="Amount">Budget Amount:</label>
-                        <input type="text" class="form-control" id="Amount" name="Amount" placeholder="Budget Amount..">
-                        <span style="color:red;" id="amoErr"></span>
-                    </div>
-                    <!-- <div class="form-group">
-                        <label for="Category">Expense Category:</label>
-                        <select class="select" id="Category" name="Category">
-                                <option value="">--Select Category--</option>
-                                <?php// foreach ($Categorytable as $value): ?>
-                                <option value="<?//=$value['categoryName']; ?>"></option>
-                                <?php// endforeach; ?>
-                            </select>  
-                        <span style="color:red;" id="catErr"></span>
-                    </div> -->
-
-                    <!-- <div class="form-group">
-                        <label for="Category">Expense Category:</label>
-                        <select class="select" id="Category" name="Category">
-                                <option value="">--Select One--</option>
-                                <option value="abc">abc</option>
-                                <option value="def">def</option>
-                            </select> 
-                        <span style="color:red;" id="catErr"></span>
-                    </div> -->
-                    
-                    <br>
-                    <div class="form-group">
-                        <label for="Category">Expense Category:</label>
-                        <select class="select" id="Category" name="Category">
-                                <option value="">--Select Category--</option>
-                                <?php foreach ($Categorytable as $value): ?>
+<!-- add budgets modal -->
+<div class="modal fade right" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form class="modal-dialog" id="myForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Budgets </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">   
+     		<div class="row">
+     			<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" id="budgetName" name="budgetName" class="form-control" placeholder="Budget Name">
+						  <label for="floatingSelect">Budget Name</label>
+                          <span style="color:red;" id="budErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" id="Amount" name="Amount" class="form-control" placeholder="Budget Amount">
+						  <label for="floatingSelect">Budget Amount</label>
+                          <span style="color:red;" id="amoErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control" id="Category" name="Category" aria-label="From Account">
+						    <option selected> select Expense Categories</option>
+						    <?php foreach ($Categorytable as $value): ?>
                                     <option value="<?= $value['categoryId']?>"><?= $value['categoryName']?></option>
                                 <?php endforeach; ?>
-                            </select> 
-                        <span style="color:red;" id="catErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="Startdate">Start Date:</label>
-                        <input type="text" class="form-control" id="Startdate" name="Startdate" placeholder="Start Date..">
-                        <span style="color:red;" id="StartdateErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="Enddate">End Date:</label>
-                        <input type="text" class="form-control" id="Enddate" name="Enddate" placeholder="End Date..">
-                        <span style="color:red;" id="EnddateErr"></span>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
-            </div>
-        </div>
+						  </select>
+						  <label for="floatingstatus"> Expense Categories</label>
+                          <span style="color:red;" id="catErr"></span>
+						</div>
+					</div>  
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" class="form-control" id="Startdate" name="Startdate"  placeholder="Start Date">
+						  <label for="floatingSelect"> Start Date  </label>
+                          <span style="color:red;" id="StartdateErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" class="form-control" id="Enddate" name="Enddate"  placeholder="End Date">
+						  <label for="floatingSelect"> End Date  </label>
+                          <span style="color:red;" id="EnddateErr"></span>
+						</div>
+					</div>
+					 
+     		</div>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="submitBtn">Save</button>
+      </div>
     </div>
-</div>
+  </form>
+</div> 
 
-<!-- Modal End -->
-
-
-<!-- Edit Modal Start -->
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal Label" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Bank Account</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="POST" id="myeditForm" class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="budgetName">Budget Name:</label>
-                        <input type="text" class="form-control" id="budgetNameInput" name="budgetName" placeholder="budget Name..">
-                        <span style="color:red;" id="budErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="Amount">Budget Amount:</label>
-                        <input type="text" class="form-control" id="AmountInput" name="Amount" placeholder="Budget Amount..">
-                        <span style="color:red;" id="amoErr"></span>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="Category">Expense Category:</label>
-                        <select class="select" id="BudgetCategory" name="Category">
-                                <option value="">--Select Category--</option>
-                                <?php foreach ($Categorytable as $value): ?>
+<!-- update modal -->
+<div class="modal fade right" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form class="modal-dialog" id="myeditForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Budgets </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">   
+     		<div class="row">
+     			<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" id="budgetNameInput" name="budgetName" class="form-control" placeholder="Budget Name">
+						  <label for="floatingSelect">Budget Name</label>
+                          <span style="color:red;" id="budErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" id="AmountInput" name="Amount" class="form-control" placeholder="Budget Amount">
+						  <label for="floatingSelect">Budget Amount</label>
+                          <span style="color:red;" id="amoErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control" id="BudgetCategory" name="Category" aria-label="From Account">
+						    <option selected> select Expense Categories</option>
+						    <?php foreach ($Categorytable as $value): ?>
                                     <option value="<?= $value['categoryId']?>"><?= $value['categoryName']?></option>
-                                <?php endforeach; ?>
-                            </select> 
-                        <span style="color:red;" id="catErr"></span>
-                    </div>
-                    <br>
-                    <!-- <div class="form-group">
-                        <label for="Category">Expense Category:</label>
-                        <select class="select" id="Category" name="Category">
-                                <option value="">--Select a Bank Account--</option>
-                                <option value="abc">abc</option>
-                                <option value="def">def</option>
-                            </select> 
-                        <span style="color:red;" id="catErr"></span>
-                    </div> -->
-                    <div class="form-group">
-                        <label for="Startdate">Start Date:</label>
-                        <input type="text" class="form-control" id="StartdateInput" name="Startdate" placeholder="Start Date..">
-                        <span style="color:red;" id="StartdateErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="Enddate">End Date:</label>
-                        <input type="text" class="form-control" id="EnddateInput" name="Enddate" placeholder="End Date..">
-                        <span style="color:red;" id="EnddateErr"></span>
-                    </div>
-                    <input type="hidden" name="id" id="idInput" value="">
-                </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary save" id="abc">Save Changes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-<div class="page-content">
-    <div class="container-fluid">
-
-        <!-- start page title -->
-       
-        
-        <!-- end page title -->
-
-        <div class="row">
-            <div class="col-lg-12">
-                
-                <div class="card">
-                    <div class="card-body ">
-                    <div class="sidebar-header">
-                        <button type="button" class="btn btn-primary" id="openModalBtn">Add New Budgets</button>  <br> </br>
-                        </div>
-                        <div class="table-responsive ser_staffpayment_append">   
-                        <table id="accountlist" class="display responsive nowrap table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th>BUDGET NAME</th>
-                                <th>PROPOSED AMOUNT</th>
-                                <th>UPDATED BUDGET AMOUNT</th>
-                                <th>BUDGET START DATE</th>
-                                <th>BUDGET END DATE</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($budgetslist as $value): ?>
-                              
-                                <tr>
-                                    <td><?= $value['budget_name']?></td>
-                                    <td><?= ($value['update_amount'] != '')?$value['update_amount']:$value['budget_amount']?></td>
-                                    <td><?= $value['budget_amount']?></td>
-                                    <td><?= $value['start_date']?></td>
-                                    <td><?= $value['end_date']?></td>
-                                    <td>
-                                    
-                                    <a href="#" class="btn btn-warning btn-sm editButton" data-id="<?php echo $value['id']; ?>">
-                                    <i class="fa fa-pencil"></i> Edit
-                                    </a>
-                                        <!-- <button class="btn btn-primary btn-sm">Edit</button> -->
-                                        
-                                    <a href="#" class="btn btn-danger btn-sm Deletebtn" data-id="<?php echo $value['id']; ?>">
-                                    <i class="fa fa-trash"></i> Delete
-                                    </a>
-                                        <!-- <button class="btn btn-danger btn-sm">Delete</button> -->
-                                    </td>
-                                    
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    </div>
-                    <!-- end card-body -->
-                </div>
-                <!-- end card -->
-            </div>
-            <!-- end col -->
-        </div>
-        <!-- end row -->
-
+                                <?php endforeach; ?> 
+						  </select>
+						  <label for="floatingstatus"> Expense Categories</label>
+                          <span style="color:red;" id="catErr"></span>
+						</div>
+					</div>  
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" id="StartdateInput" name="Startdate" class="form-control" placeholder="Start Date">
+						  <label for="floatingSelect"> Start Date  </label>
+                          <span style="color:red;" id="StartdateErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" id="EnddateInput" name="Enddate" class="form-control" placeholder="End Date">
+						  <label for="floatingSelect"> End Date  </label>
+                          <span style="color:red;" id="EnddateErr"></span>
+						</div>
+					</div>
+					 
+     		</div>  
+      </div>
+      <input type="hidden" name="id" id="idInput" value="">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary save"  id="abc">Save</button>
+      </div>
     </div>
-    <!-- container-fluid -->
-</div>
+  </form>
+</div> 
+<!--end new design -->
 
 
-<!-- End Page-content -->
-
-<!-- end main content-->
 
         <script>
         $(document).ready(function() {

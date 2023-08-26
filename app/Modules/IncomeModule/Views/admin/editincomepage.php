@@ -58,7 +58,7 @@
                             <select class="form-control" name="bankAccount" id="bankAccount">
                                 <!-- <option value="0">Select a bank account</option> -->
                             
-                                
+                                <option value="<?= $value['id']?>"><?= $value['account_number']?></option>
                                 
                                 <?php foreach($bankaccountno as $item):?>
                                     <option value="<?= $item['id']?>"><?= $item['account_number']?></option>

@@ -27,6 +27,22 @@ class IncomeController extends BaseController{
 
     public function incomepage(){
 
+        $CategoryModel = new CategoryModel();
+
+        // $incometable = $CategoryModel->findAll();
+        // SELECT * FROM categorytable WHERE categoryType LIKE '%Income%'; 
+        $incomeCategories = $CategoryModel
+            ->like('categoryType', 'income')
+            ->findAll();
+         
+        $BankAccountModel = new BankAccountModel();
+ 
+        $bankaccountno = $BankAccountModel->findAll();
+
+
+
+
+        //previous code 
         $IncomeModel = new IncomeModel;
 
         $incometable = $IncomeModel->findAll();
@@ -57,7 +73,12 @@ class IncomeController extends BaseController{
         // die();
         
         
-        return view('Modules\IncomeModule\Views\admin\incomepage',["data"=>$data,"username" => $this->session->get('name'),]);
+        return view('Modules\IncomeModule\Views\admin\incomepage',[
+            "data"=>$data,
+            "username" => $this->session->get('name'),
+            'incomeCategories' => $incomeCategories,
+            'bankaccountno'=>$bankaccountno
+        ]);
 
     }
 
@@ -105,8 +126,6 @@ class IncomeController extends BaseController{
         // return view('Modules\IncomeModule\Views\admin\incomepage',["data"=>$incomeCategories]);
 
     }
-
-
 
     public function addnewincomepage(){
 
@@ -184,6 +203,7 @@ class IncomeController extends BaseController{
 
             $validation = \Config\Services::validation();
 
+            
             $rules = [
                 'incomeCategory' => 'required', 
                 'bankAccount' => 'required',
@@ -197,6 +217,7 @@ class IncomeController extends BaseController{
             ];
     
             if (!$this->validate($rules)) {
+             
                 $response = [
                     'incomeCategory' => [
                         'status' => 'error',
@@ -232,11 +253,12 @@ class IncomeController extends BaseController{
                         'message' => $validation->getError('date') ?: '',
                     ],
                 ];
+                
                 return json_encode($response);
             }else{
 
                 if ($this->request->getFile('attachment')->isValid()){
-
+                
                     $property_id = $this->session->get('rs_property_id');
                     $attachment = $this->request->getFile('attachment');
 
@@ -335,6 +357,7 @@ class IncomeController extends BaseController{
         // print_r($data);
         // die();
 
+
         // return json_encode($data);
 
         return view('Modules\IncomeModule\Views\admin\editincomepage', [
@@ -345,14 +368,63 @@ class IncomeController extends BaseController{
        
     }
 
+    public function editincomeajax(){
+
+        $id = $this->request->getGET('id');
+
+        $IncomeModel = new IncomeModel();
+        
+        // $id  = $this->request->getPost('id');
+        $db = \Config\Database::connect();
+
+        $CategoryModel = new CategoryModel();
+
+        $incomeCategories = $CategoryModel
+            ->like('categoryType', 'income')
+            ->findAll();
+        
+        $BankAccountModel = new BankAccountModel();
+
+        $bankaccountno = $BankAccountModel->findAll();
+
+
+        $query = $db->table('incometable')
+            ->select('incometable.*,categoryName,account_number,bank_account.*,categorytable.*')
+            ->join('categorytable', 'incometable.incomeCategory = categorytable.categoryId', 'left')
+            ->join('bank_account', 'incometable.bankAccount = bank_account.id', 'left')
+            ->where('incomeId', $id)
+            ->get();
+        $data = $query->getResultArray();
+
+        $alldata =[
+
+            'incomedata'=>$data,
+            'incomeCategories' => $incomeCategories,
+            'bankaccountno'=>$bankaccountno
+
+        ];
+
+            // echo'<pre>';
+            // print_r($alldata);
+            // die();
+
+        return json_encode($alldata);
+
+        $data['getBankAccount'] = $bankaccount->findAll();
+        return view('Modules\BankAccount\Views\admin\bank\bank-account', $data);
+
+    }
+
     public function updateincome($id)
     {
        
      $IncomeModel = new IncomeModel;
 
-     $id = $this->request->getPost('incomeId');
+     $id = $this->request->getPost('updateincomeId');
      $incomerow = $IncomeModel->find($id);
      
+    //  echo print_r($id);
+    //  die();
 
      $property_id = $this->session->get('rs_property_id');
      
@@ -370,8 +442,8 @@ class IncomeController extends BaseController{
 
     $data = [
         
-        'incomeCategory'=>$this->request->getPost('incomeCategory'),
-        'bankAccount'=>$this->request->getPost('bankAccount'),
+        'incomeCategory'=>$this->request->getPost('updateincomeCategory'),
+        'bankAccount'=>$this->request->getPost('updatebankAccount'),
         'amount'=>$this->request->getPost('amount'),
         'reference'=>$this->request->getPost('reference'),
         'description'=>$this->request->getPost('description'),
@@ -380,13 +452,13 @@ class IncomeController extends BaseController{
         'date'=>$this->request->getPost('date'),
         'property_id'  => $property_id
        ];
-        
+    
+    //    echo print_r($data);
+    //    die();
+
         $IncomeModel->update($id,$data);
 
-        // return $this->response->setJSON(['status' => 'success', 'message' => 'Form updated successfully.']);
-
-        // $IncomeModel = new IncomeModel();
-        // $incometable = $IncomeModel->findAll();
+        
 
         return $this->response->setJSON(['status' => 'success', 'message' => 'Form updated successfully.']);
         

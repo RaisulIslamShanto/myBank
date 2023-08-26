@@ -149,10 +149,17 @@ class BankAccountController extends BaseController{
         $bankaccount = new BankAccountModel();
         $data = $bankaccount->find($id);
 
+        
 
-      $data['getAcclist']= $bankaccount->findall();
-      return $this->response->setJSON($data);
+        $data['getAcclist'] = $bankaccount->findall();
 
+        // echo '<pre>';
+        // print_r($data);
+        // die();
+
+        return $this->response->setJSON($data);
+    
+      
 
     }
 

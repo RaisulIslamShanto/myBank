@@ -130,8 +130,8 @@
 						  <select class="form-control" id="BankNameInput" name="BankName" aria-label="Bank Name">
 						    <option selected> select Bank Name </option>
 						    <?php foreach ($banklist as $value1): ?>
-                                 <option value="<?php echo $value1['id']; ?>"><?php echo $value1['bank_name']; ?></option>
-                            <?php endforeach; ?> 
+                      <option value="<?php echo $value1['id']; ?>"><?php echo $value1['bank_name']; ?></option>
+                <?php endforeach; ?> 
 						  </select>
 						  <label for="floatingstatus">Bank Bank Name </label>
                           <span style="color:red;" id="banknameeErr"></span>

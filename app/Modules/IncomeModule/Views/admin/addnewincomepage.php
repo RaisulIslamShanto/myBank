@@ -307,7 +307,7 @@ $(document).ready(function(){
 
         
             
-        });
+    });
 
 
     // $('#incomeCategory').on('click',function(){

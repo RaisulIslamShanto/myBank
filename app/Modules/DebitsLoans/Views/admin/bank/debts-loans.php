@@ -2,146 +2,135 @@
 <?= $this->section('content') ?>
 
 
+<!-- new design -->
+<div class="card">
+			<div class="card-body table-responsive">
+				<div class="d-flex flex-wrap gap-2 align-items-center mb-4 header_title">
+					<h5 class="m-0">Debts <span> / Loans </span>  </h5>
+					<div class="ms-auto d-flex flex-wrap gap-2"> 
+						<button class="btn btn-sm btn-primary" id="openModalBtn"><i class="ri-equalizer-fill"></i>  Add New</button> 
+					</div> 
+				</div>
+	 	 
+				<table id="datatable" class="table table-striped" style="width:100%">
+	        <thead>
+	            <tr>  	 
+	                <th>Amount</th>   
+	                <th>Type</th>   
+	                <th>Account</th>   
+	                <th>Person</th>   
+	                <th>Date</th>      
+	                <th>Note</th>      
+	                <th>Action</th>
+	            </tr>
+	        </thead>
+        	<tbody>
+            <?php foreach ($debtsData as $value): ?>
+            <tr>
+              <td>USD <?= $value['amount']?></td>
+              <td><?= $value['select_type']?></td>
+              <td><?= $value['bank']->bank_name?></td>
+              <td><?= $value['person']?></td>
+              <td><?= $value['date']?> </td>
+              <td><?= $value['note']?></td>
+              
+              <td> 
+              	<div class="d-flex gap-2">
+              		<a href="<?php echo base_url('/admin/debts_loans_edit/'. $value['id']); ?>" class="btn btn-sm btn-primary editbtn" > <i class="ri-edit-2-line"></i> </a>
+              		<a  class="btn btn-sm btn-danger Deletebtn" data-id="<?php echo $value['id']; ?>"><i class="ri-delete-bin-line"></i></a>
+              	</div>
+              </td>
+            </tr> 
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+			</div>
+		</div>
+	 
+</div> 
+ 
 
-<!-- For New Bank Account modal -->
-
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Debts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="myForm">
-                    <div class="form-group">
-                        <label for="amount">Amount:</label>
-                        <input type="number" class="form-control" id="amount" name="amount" placeholder="amount..">
-                        <span style="color:red;" id="amountErr"></span>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="Type">Select Type:</label>
-                            <select class="select" id="Type" name="Type">
-                                <option value="">--Select Type--</option>
-                                <option value="Lend">Lend</option>
-                                <option value="Borrow">Borrow</option>
-                            </select> 
-                        <span style="color:red;" id="TypeErr"></span>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="BankAccount">Select Bank Account:</label>
-                            <select class="select" id="BankAccount" name="BankAccount">
-                                <option value="">--Select a Bank Account--</option>
-                                <?php foreach ($data as $value1): 
+<!-- add new modal -->
+<div class="modal fade right" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form class="modal-dialog" id="myForm" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"> Add Debts    </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">   
+     		<div class="row">
+     			<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount">
+						  <label for="floatingSelect">Amount</label>
+                          <span style="color:red;" id="amountErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control" id="Type" name="Type" aria-label="From Account">
+						    <option selected> Select Type:</option>
+                            <option value="Lend">Lend</option>
+                            <option value="Borrow">Borrow</option> 
+						  </select>
+						  <label for="floatingstatus"> Select Type:</label>
+                          <span style="color:red;" id="TypeErr"></span>
+						</div>
+					</div> 
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <select class="form-control"id="BankAccount" name="BankAccount" aria-label="To Account ID">
+                          <option value="">--Select a Bank Account--</option>
+                          <?php foreach ($data as $value1): 
                                      if(!$value1['bank']->deleted_at){?>
                                     ?>
                                  <option value="<?php echo $value1['id']; ?>"><?php echo $value1['bank']->bank_name.'-'. $value1['account_number'].'-Balance-'.$value1['initial_balance']; ?></option>
-                                <?php } endforeach; ?>
-                            </select> 
-                        <span style="color:red;" id="BankErr"></span>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="Person">Person:</label>
-                        <input type="text" class="form-control" id="Person" name="Person" placeholder="Person..">
-                        <span style="color:red;" id="PersonErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Date:</label>
-                        <input type="text" class="form-control" id="date" name="date" placeholder="Transfer Date..">
-                        <span style="color:red;" id="dateErr"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="InitialBalance">Note:</label>
-                        <input type="text" class="form-control" id="note" name="note" placeholder="note..">
-                        <span style="color:red;" id="noteErr"></span>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
-            </div>
-        </div>
+                            <?php } endforeach; ?>
+						  </select>
+						  <label for="floatingstatus"> Select Type </label>
+                          <span style="color:red;" id="BankErr"></span>
+						</div>
+                        
+					</div>  
+					
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="text" id="Person" name="Person" class="form-control" placeholder="Person">
+						  <label for="floatingSelect">Person </label>
+                          <span style="color:red;" id="PersonErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <input type="date" id="date" name="date" class="form-control" placeholder="Date">
+						  <label for="floatingSelect"> Date  </label>
+                          <span style="color:red;" id="dateErr"></span>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="form-floating">
+						  <textarea class="form-control" id="note" name="note" placeholder="Type Note"></textarea>
+						  <label for="floatingSelect">Note:</label>
+                          <span style="color:red;" id="noteErr"></span>
+						</div>
+					</div> 
+     		</div>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+      </div>
     </div>
+  </form>
 </div>
 
-<!-- Modal End -->
+
+<!--end new design -->
 
 
+<!-- For New Bank Account modal -->
 
-<div class="page-content">
-    <div class="container-fluid">
-
-        <!-- start page title -->
-       
-        
-        <!-- end page title -->
-
-        <div class="row">
-            <div class="col-lg-12">
-                
-                <div class="card">
-                    <div class="card-body ">
-                    <div class="sidebar-header">
-                        <button type="button" class="btn btn-primary" id="openModalBtn">Add New</button>
-                        </div>
-                        <br></br>
-                        <div class="table-responsive ser_staffpayment_append">   
-                        <table id="debtslist" class="display responsive nowrap table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th>AMOUNT</th>
-                                <th>TYPE</th>
-                                <th>ACCOUNT</th>
-                                <th>PERSON</th>
-                                <th>DATE</th>
-                                <th>NOTE</th>
-                                <th>ACTIONS</th>
-                                <!-- <th>Actions</th> -->
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <?php foreach ($debtsData as $value): ?>
-                                <tr>
-                                    <td>BDT <?= $value['amount']?></td>
-                                    <td><?= $value['select_type']?></td>
-                                    <td><?= $value['bank']->bank_name?></td>
-                                    <td><?= $value['person']?></td>
-                                    <td><?= $value['date']?></td>
-                                    <td><?= $value['note']?></td>
-                                    <td>
-                                    <!-- <a href="#" class="btn btn-warning btn-sm editButton" data-id="<?php echo $value['id']; ?>">
-                                    <i class="fa fa-pencil"></i> Manage
-                                    </a> -->
-                                    <a href="<?php echo base_url('/admin/debts_loans_edit/'. $value['id']); ?>" class="btn btn-warning btn-sm editbtn">
-                                    <i class="fa fa-pencil"></i> Manage
-                                    </a>
-                                    <a href="#" class="btn btn-danger btn-sm Deletebtn" data-id="<?php echo $value['id']; ?>">
-                                    <i class="fa fa-trash"></i> Delete
-                                    </a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    </div>
-                    <!-- end card-body -->
-                </div>
-                <!-- end card -->
-            </div>
-            <!-- end col -->
-        </div>
-        <!-- end row -->
-
-    </div>
-    <!-- container-fluid -->
-</div>
 
 
 <!-- End Page-content -->
