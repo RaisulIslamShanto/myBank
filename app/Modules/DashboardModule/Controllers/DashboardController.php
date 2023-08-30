@@ -31,6 +31,12 @@ class DashboardController extends BaseController{
      * This method index shows Floor list of a property.
      * Method - get
      */
+    public function testdashboard($id){
+
+        echo 12;
+        die();
+    }
+
     public function dashboard(){
 
         // $BankModel = new BankModel;

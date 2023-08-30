@@ -54,6 +54,8 @@ class Admincontroller extends BaseController{
 
                 $getUser = $user->where(['email' => $email, 'password' => $password])->first();
 
+                // echo 1;
+                // die();
 
                 if (get_cookie('login') && !$getUser) {
                     $rememberkey = $this->request->getVar('password');
@@ -62,6 +64,7 @@ class Admincontroller extends BaseController{
 
 
                 if ($getUser) {
+
                     $session_data = [
                         'userId'     => $getUser['id'],
                         'name'       => $getUser['name'],
@@ -75,9 +78,15 @@ class Admincontroller extends BaseController{
 
                     $this->setCookie($getUser, $user);
 
+                    // echo 2;
+                    // die();
+
                     if($getUser['user_type']==1){
 
-                        return redirect()->to(base_url('/admin/super_admin_home'));
+                        // echo 12;
+                        // die();
+                        
+                        return redirect()->to(base_url('/admin/dashboard'));
 
                     }
 
@@ -93,14 +102,24 @@ class Admincontroller extends BaseController{
 
 
                     if($getUser['package_id']==0){
-
+                        echo 4;
+                        die();
                         return redirect()->to(base_url('/admin/select_package'));
 
-                    }else{
-
+                    }else{  
+                        // echo 5;
+                        // die();
                         if($getUser['user_type']==10){
+
+                            echo 13;
+                            die();
+
                             return redirect()->to(base_url('admin/dashboard'));
                         }else{
+
+                            // echo 6;
+                            // die();
+
                             return redirect()->to(base_url('/admin/account_mode'));
                         }
                     }

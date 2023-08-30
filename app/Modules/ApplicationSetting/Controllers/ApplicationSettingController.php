@@ -23,6 +23,41 @@ class ApplicationSettingController extends BaseController{
      */
     
 
+    public function language(){
+
+        $data['first'] = lang('myCustomLang.first',[],'bangla');
+        $data['second'] = lang('myCustomLang.second',[],'bangla');
+        $data['third'] = lang('myCustomLang.third',[],'bangla');
+
+        return view('Modules\ApplicationSetting\Views\admin\bank\languagepage',$data);
+
+    }
+
+    public function sidebarbangla(){
+
+        $data['dashboard'] = lang('myCustomLang.dashboard',[],'bangla');
+        $data['Manage_Users'] = lang('myCustomLang.Manage_Users',[],'bangla');
+        $data['Categories'] = lang('myCustomLang.Categories',[],'bangla');
+        $data['Banks'] = lang('myCustomLang.Banks',[],'bangla');
+        
+        $data['Bank_Accounts'] = lang('myCustomLang.Bank_Accounts',[],'bangla');
+        $data['Balance_Transfer'] = lang('myCustomLang.Balance_Transfer',[],'bangla');
+        $data['Debts_Loans'] = lang('myCustomLang.Debts_Loans',[],'bangla');
+        $data['Incomes'] = lang('myCustomLang.Incomes',[],'bangla');
+        $data['Expenses'] = lang('myCustomLang.Expenses',[],'bangla');
+        $data['Budgets'] = lang('myCustomLang.Budgets',[],'bangla');
+        $data['Income_Report'] = lang('myCustomLang.Income_Report',[],'bangla');
+        $data['Expense_Report'] = lang('myCustomLang.Expense_Report',[],'bangla');
+        $data['Calendar'] = lang('myCustomLang.Calendar',[],'bangla');
+        $data['Set_Goals'] = lang('myCustomLang.Set_Goals',[],'bangla');
+        $data['My_Assets'] = lang('myCustomLang.My_Assets',[],'bangla');
+        $data['Application_settings'] = lang('myCustomLang.Application_settings',[],'bangla');
+       
+
+        return view('Modules\ApplicationSetting\Views\admin\bank\sidebarbangla',$data);
+
+    }
+
     public function ApplicationSetting($pro_id=''){
         if(!empty($pro_id) && is_numeric($pro_id)){
             $this->session->set('rs_property_id',$pro_id);

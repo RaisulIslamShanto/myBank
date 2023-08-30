@@ -34,14 +34,31 @@ class Popertycontroller extends BaseController
         $data['properties']= $properties;
         $data['type']= $type['type'];
 
+        // echo'<pre>';
+        // print_r($data);
+        // echo 7;
+        // die();
 
         if ($type['type'] == 1) {
 
             $properties= $poperty_model->where('owner',$userId)->first();
             if(empty($properties)){
+
+                // echo 8;
+                // die();
+
+
                 return view('\Modules\User\Views\admin\user\poperty-list',$data);
             }else{
+
+                // echo 9;
+                // die();
+                // return view('\Modules\DashboardModule\Views\admin\dashboardpage');
+                // return redirect()->to(base_url('\Modules\DashboardModule\Views\admin\dashboardpage'));
+
                 return redirect()->to(base_url('/admin/home/'.$properties['id']));
+                // return redirect()->to(base_url('/admin/dashboard/'.$properties['id']));
+                // return redirect()->to(base_url('/admin/dashboard/'));
             }
 
 

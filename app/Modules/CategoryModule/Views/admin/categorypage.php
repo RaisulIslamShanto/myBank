@@ -135,7 +135,8 @@
             <!-- endnew -->
 
  
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -223,7 +224,13 @@ $(document).ready(function(){
                     if (response.success) {
                             
                             console.log(response.success.message);
-                              alert(response.success.message); 
+                            //   alert(response.success.message); 
+
+                            $.toast({ text :' New Category has been created',
+                                        hideAfter : 12000,
+                                        position: 'top-right',
+                                        bgColor: '#FF1356',
+                                        textColor: 'white' });
                             //   $('#updatemodal').modal('hide');
                             $('#updatemodal').appendTo("body").modal('hide');
                               $('#myform')[0].reset();

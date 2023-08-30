@@ -250,6 +250,8 @@
 <!-- End Page-content -->
 
 <!-- end main content-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 <script>
@@ -294,10 +296,17 @@ $(document).ready(function() {
                 $("#openModalBtn").click(function() {
                     $("#myModal").modal("show");
                 });
-            $("#submitBtn").click(function() {
+                $("#submitBtn").click(function() {
                         
                         var bankErr = $('#bankErr');
                         var formData = $("#myForm").serialize();
+
+                            // setTimeout(function() { 
+                                
+                            //     $('#myform')[0].reset();
+                            //     window.location.reload();
+                            
+                            // }, 2000);
                         // console.log(formData);
                             $.ajax({
                             url: "<?php echo base_url('/admin/bank_list_add'); ?>",
@@ -308,7 +317,12 @@ $(document).ready(function() {
                                 bankErr.text(response.BankName ? response.BankName.message : '');
 
                                 if (response.success) {
-                                alert(response.success.message);
+                                // alert(response.success.message);
+                                $.toast({ text :' New Bank has been created',
+                                        hideAfter : 12000,
+                                        position: 'top-right',
+                                        bgColor: '#FF1356',
+                                        textColor: 'white' });
                                 $('#myForm')[0].reset();
                                 window.location.reload();
                                 }

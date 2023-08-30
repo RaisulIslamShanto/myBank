@@ -5,9 +5,9 @@
         <div class="card">
 			<div class="card-body table-responsive">
 				<div class="d-flex flex-wrap gap-2 align-items-center mb-4 header_title">
-					<h5 class="m-0">List         <span> of users    </span>  </h5>
+					<h5 class="m-0"><?php echo lang('mylang.list'); ?>  </h5>
 					<div class="ms-auto d-flex flex-wrap gap-2"> 
-						<button class="btn btn-sm btn-primary" id="addnewbtn" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="ri-equalizer-fill"></i> Add  user  </button>
+						<button class="btn btn-sm btn-primary" id="addnewbtn" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="ri-equalizer-fill"></i> <?php echo lang('mylang.add_user'); ?></button>
 				 
 					</div> 
 				</div>
@@ -15,11 +15,11 @@
 				<table id="datatable" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>  				
-                                <th>SR No.</th>
-                                <th>Name </th>  
-                                <th>Email</th>
-                                <th>Date Created</th> 
-                                <th>Action</th>
+                                <th><?php echo lang('mylang.sr_no.'); ?></th>
+                                <th><?php echo lang('mylang.name'); ?></th>  
+                                <th><?php echo lang('mylang.email'); ?></th>
+                                <th><?php echo lang('mylang.date_Created'); ?></th> 
+                                <th><?php echo lang('mylang.action'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -158,8 +158,8 @@
                     <!-- end card-body -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script>
@@ -239,6 +239,13 @@ $(document).ready(function(){
             var password = $("#password").val();
             var confirm_password = $("#confirm_password").val();
 
+            // setTimeout(function() { 
+                    
+                //     $('#myform')[0].reset();
+                //     window.location.reload();
+                   
+                // }, 2000);
+
             $.ajax({
                 type: 'POST',
                 url: 'saveuser',
@@ -260,8 +267,12 @@ $(document).ready(function(){
                             if (response.success) {
                             
                             console.log(response.success.message);
-                              alert(response.success.message); 
-                              $.toast(' New User has been created');
+                            //   alert(response.success.message); 
+                              $.toast({ text :' New User has been created',
+                                        hideAfter : 12000,
+                                        position: 'top-right',
+                                        bgColor: '#FF1356',
+                                        textColor: 'white' });
                             //   $('#updatemodal').modal('hide');
                               $('#updatemodal').appendTo("body").modal('hide');
                               $('#myform')[0].reset();

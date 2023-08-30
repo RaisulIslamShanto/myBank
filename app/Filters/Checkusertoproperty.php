@@ -47,9 +47,11 @@ class CheckUsertoProperty implements FilterInterface
             //echo $property_user['owner'];echo $user_id;die();
 		
             if($user_type != 1){
+         
 				if($property_user['company_id']!=$user['company_id']){
 					return redirect()->to(base_url('/'));
 				}
+                // return redirect()->to(base_url('/'));
         	}
         
        // echo $property_id;echo $property_id;die();

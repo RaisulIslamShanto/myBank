@@ -7,7 +7,7 @@ namespace Modules\Manage_user\Controllers;
 use App\Controllers\BaseController; 
 use Modules\Manage_user\Models\UserModel; 
 use Modules\CategoryModule\Models\Categorymodel; 
-
+ 
 class Manage_profileController extends BaseController{
 
     public $session,$db;
