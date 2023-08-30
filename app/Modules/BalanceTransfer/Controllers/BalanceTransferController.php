@@ -78,7 +78,7 @@ class BalanceTransferController extends BaseController{
             'FromAccount' => 'required',
             'ToAccount' => 'required',
             'amount' => 'required|numeric',
-            'date' => 'required',
+            'date' => 'required|date_valid',
             'note' => 'required',
         ];
     

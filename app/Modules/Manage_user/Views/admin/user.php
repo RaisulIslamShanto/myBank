@@ -32,7 +32,8 @@
                                 <td> 
                                         <div class="d-flex gap-2">
                                             <a href="javascript:;" class="btn btn-sm btn-primary edit" value="<?= $value['userId']?>"> <i class="ri-edit-2-line"></i> </a>
-                                            <a href="<?php echo base_url('/admin/deleteuser/'.$value['userId'])?>" value="<?= $value['userId']?>" class="btn btn-sm btn-danger delete"><i class="ri-delete-bin-line"></i></a>
+                                            
+                                            <button type="button"  class="btn btn-sm btn-danger deleteuser" value="<?= $value['userId']?>"><i class="ri-delete-bin-line"></i></button>
                                         </div>
                                     </td>
                             </tr> 
@@ -156,7 +157,10 @@
                         
                     <!-- end card-body -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" integrity="sha512-wJgJNTBBkLit7ymC6vvzM1EcSWeM9mmOu+1USHaRBbHkm6W9EgM0HY27+UtUaprntaYQJF75rc8gjxllKs5OIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
 
 <script>
 
@@ -257,6 +261,7 @@ $(document).ready(function(){
                             
                             console.log(response.success.message);
                               alert(response.success.message); 
+                              $.toast(' New User has been created');
                             //   $('#updatemodal').modal('hide');
                               $('#updatemodal').appendTo("body").modal('hide');
                               $('#myform')[0].reset();
@@ -274,6 +279,38 @@ $(document).ready(function(){
             
     });
 
+    $('.deleteuser').click(function(event) { 
+
+        event.preventDefault();
+        var id = $(this).attr('value');
+        // alert(id);
+        
+
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+
+           
+
+        if (result.isConfirmed) {
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+            ).then(() => {
+                window.location.href = "<?php echo base_url('/admin/deleteuser/')?>"+id;
+            });
+        }
+        })
+
+    });
+    
     $('.edit').click(function (event)
     {
         event.preventDefault();

@@ -14,6 +14,7 @@ use Modules\DebitsLoans\Models\LendModel;
 use Modules\Budgets\Models\BudgetsModel;
 use Modules\DashboardModule\Models\Dashboardmodel;
 use Modules\BankModule\Models\BankModel;
+use Modules\ApplicationSetting\Models\SettingModel;
 
  
 class DashboardController extends BaseController{
@@ -35,16 +36,26 @@ class DashboardController extends BaseController{
         // $BankModel = new BankModel;
 
         // $bankacc = $BankModel->findAll();
+        $settingmodel = new SettingModel();
+        $settingdata = $settingmodel->where('id',1)->findAll();
+        // echo "<pre>";
+        // print_r($settingdata);die();
+        $currency = $settingdata[0]['default_currency'];
+
+        // var_dump($currency);die();
+        // print_r($currency);die();
 
         $db = \Config\Database::connect(); 
 
-        $query = $db->table('banktable'); 
+        $query = $db->table('bank_list'); 
         $rowCount = $query->countAllResults();
 
         $query = $db->table('incometable'); 
         $query->selectSum('amount')->where('MONTH(date)', date('m'))->where('YEAR(date)', date('Y'));
         $income = $query->get()->getRow();
         $totalAmount = $income->amount;
+
+        // var_dump($totalAmount);die();
 
         $query = $db->table('expenses'); 
         $query->selectSum('amount');
@@ -136,7 +147,10 @@ class DashboardController extends BaseController{
         
         // for pie chart
 
-        $query = $db->table('expenses'); 
+        $query = $db->table('expenses')
+                    ->select('expenses.*,categorytable.*')
+                    ->join('categorytable','expenses.expense_category = categorytable.categoryId');
+                    
         $pievalue = $query->get()->getResultArray();
      
         // echo '<pre>'; print_r($pievalue);die;
@@ -151,7 +165,8 @@ class DashboardController extends BaseController{
             'totalborrow'=>$totalborrow, 
             'chartvalue'=>$pievalue,
             'budgetlist'=>$budgetlist,
-            'balanceData'=>$balanceData 
+            'balanceData'=>$balanceData, 
+            'currency'=>$currency
     ]);
 
     }

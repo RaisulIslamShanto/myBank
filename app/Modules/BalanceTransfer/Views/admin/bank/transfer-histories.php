@@ -133,9 +133,68 @@ $(document).ready(function() {
     });
   </script>
 
-
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 <script>
         $(document).ready(function() {
+
+          $('#myForm').validate({
+
+                  rules: {
+                          
+                          FromAccount: {
+                              required: true,
+                              
+                          },
+                          ToAccount: {
+                              required: true,
+                              
+                              
+                          },
+                          amount: {
+                              required: true,
+                              number: true,
+                          },
+                          date: {
+                              required: true,
+                              
+                          },
+                          note: {
+                              required: true,
+                              
+                          },
+                          
+                      },
+
+                  messages: {
+                          
+                          FromAccount: {
+                              required: "Please enter From Account.",
+                              minlength:
+                            " Your holder Name must consist of at least 5 characters"
+                          },
+                          ToAccount: {
+                              required: " Please enter To Account.",
+                            
+                          },
+
+                          amount: {
+                              required: " Please enter amount.",
+                              number:  " Please enter only number.",
+                          },
+                          date: {
+                              required: " Please enter date.",
+                
+                          },
+                          note: {
+                              required: " Please enter note.",
+                
+                          },
+                          
+                      }
+
+          });
+
+
 
             $("#openModalBtn").click(function() {
                 // $("#myModal").modal("show");

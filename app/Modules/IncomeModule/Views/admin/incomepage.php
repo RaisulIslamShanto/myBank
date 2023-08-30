@@ -41,7 +41,8 @@
               <td> 
               	<div class="d-flex gap-2">
               		<a href="<?php echo base_url('admin/editincome/'.$value['incomeId'])?>" class="btn btn-sm btn-primary edit" value="<?= $value['incomeId']?>"> <i class="ri-edit-2-line"></i> </a>
-              		<a href="<?php echo base_url('admin/deleteincome/'.$value['incomeId'])?>" class="btn btn-sm btn-danger delete" value="<?= $value['incomeId']?>"><i class="ri-delete-bin-line"></i></a>
+              		<button type="button"  class="btn btn-sm btn-danger deleteincome" value="<?= $value['incomeId']?>"><i class="ri-delete-bin-line"></i></button>
+                  <!-- <a href="<?//php echo base_url('admin/deleteincome/'.$value['incomeId'])?>" class="btn btn-sm btn-danger delete" value="<?//= $value['incomeId']?>"><i class="ri-delete-bin-line"></i></a> -->
               	</div>
               </td>
             </tr> 
@@ -145,7 +146,7 @@
 <!-- update modal -->
 <div class="modal fade right" id="updateincomemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-  <form class="modal-dialog" id="updateincomeform" encType="multipart/form-data">
+  <form class="modal-dialog" id="updateincomeform" encType="multipart/form-data" >
   <input type="text"  name="incomeId" id="updateincomeId" name="incomeId"  >
     <div class="modal-content">
       <div class="modal-header">
@@ -156,12 +157,12 @@
      		<div class="row">
              <div class="col-md-12 mb-3">
 						<div class="form-floating">
-						  <select class="form-control" id="floatingstatus" id="updateincomeCategory" name="updateincomeCategory" aria-label="From Account">
+						  <select class="form-control"  id="updateincomeCategory" name="updateincomeCategory" aria-label="From Account">
 						    <!-- <option selected> select  Income Category</option> -->
-                            
-                            <?php foreach($incomeCategories as $value):?>
-                                <option value="<?= $value['categoryId']?>"><?= $value['categoryName']?></option>
-                            <?php endforeach?>
+                           
+                <?php foreach($incomeCategories as $value):?>
+                    <option value="<?= $value['categoryId']?>"><?= $value['categoryName']?></option>
+                <?php endforeach?>
 						  </select>
 						  <label for="floatingstatus"> Income Category</label>
                           <span style="color:red;" id="updateincomeCategoryErr"></span>
@@ -170,10 +171,11 @@
 					<div class="col-md-12 mb-3">
 						<div class="form-floating">
 						  <select class="form-control" id="updatebankAccount" name="updatebankAccount" aria-label="To Account ID">
-						    <option selected> Select Bank Account </option>
+						    <!-- <option selected> Select Bank Account </option> -->
+                  
 						    <?php foreach($bankaccountno as $value):?>
-                                <option value="<?= $value['id']?>"><?= $value['account_number']?></option>
-                            <?php endforeach?>
+                    <option value="<?= $value['id']?>"><?= $value['account_number']?></option>
+                <?php endforeach?>
 						  </select>
 						  <label for="floatingstatus"> Select Bank Account </label>
                           <span style="color:red;" id="updatebankAccountErr"></span>
@@ -252,6 +254,7 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 <script>
     $(document).ready(function(){
@@ -381,8 +384,8 @@
                                     console.log(response.success.message);
                                     alert(response.success.message); 
                                 
-                                    // $('#myform')[0].reset();
-                                    // window.location.reload();
+                                    $('#myform')[0].reset();
+                                    window.location.reload();
                             }
                         
                         // alert(response.message);
@@ -393,6 +396,37 @@
                 });
         
         });
+    });
+
+    $('.deleteincome').click(function(event) { 
+
+          event.preventDefault();
+
+          var id = $(this).attr('value');
+          // alert(id);
+
+
+          Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+          if (result.isConfirmed) {
+              Swal.fire(
+                
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+              ).then(() => {
+                window.location.href = "<?php echo base_url('admin/deleteincome/')?>"+id;
+            });
+          }
+          })
+
     });
 
     $('.edit').click(function (event)
@@ -418,8 +452,19 @@
 
                     console.log(response);
                     // $("#id").val(response.id);
-                    console.log(response.incomedata[0].incomeId);
-                   
+                    
+                    // var option = `<option value="">${response.incomedata[0].categoryName}</option>`;
+
+                    // $('#updateincomeCategory').html(option);
+                   var catID = response.incomedata[0].incomeCategory;
+                   console.log(catID);
+                  //  alert(catID);
+
+
+                    // $('#updateincomeCategory').val(response.incomedata[0].categoryName);
+                    $('#updateincomeCategory').val(response.incomedata[0].incomeCategory);
+                    // console.log(response.incomedata[0].categoryName);
+                    $('#updatebankAccount').val(response.incomedata[0].bankAccount);
                     
                     $('#updateincomeId').val(response.incomedata[0].incomeId);
                     $("#updateamount").val(response.incomedata[0].amount);
@@ -511,25 +556,46 @@
 
 
 
+    codeListTable = $("#IncomeTable").DataTable({ responsive: true, });
+        new $.fn.dataTable.Buttons( codeListTable, { 
+            buttons: [
+          
+                {
+                extend:    'excelHtml5',
+                text:      'Download Excel',
+                titleAttr: 'Excel',
+                className: 'btn btn-warning btn-sm',
+                exportOptions: {
+                    columns: ':visible'
+                	}
+                },
+                                
+                
+            ]
+        } );
+        codeListTable.buttons().container().appendTo('#tableActions');
+			   
+			
+ 
     
 
 
 
 
 
-            var table = $('#datatable2').DataTable(  );
+            // var table = $('#datatable2').DataTable(  );
     
 
-            var exportBtn = new $.fn.dataTable.Buttons(table, {
-            buttons: [{
-                extend: 'pdf',
-                text: 'Export Income data',
+            // var exportBtn = new $.fn.dataTable.Buttons(table, {
+            // buttons: [{
+            //     extend: 'pdf',
+            //     text: 'Export Income data',
                 
                 
-            }]
-            });
+            // }]
+            // });
         
-            exportBtn.container().appendTo('#download');
+            // exportBtn.container().appendTo('#download');
 
 
   });    

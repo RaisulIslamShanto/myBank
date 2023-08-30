@@ -33,8 +33,13 @@ class ApplicationSettingController extends BaseController{
         }
 
         $property_id=$this->session->get('rs_property_id');
+
         $settingmodel = new SettingModel();
-        $settingdata = $settingmodel->where('property_id',$property_id)->findAll();
+        $settingdata = $settingmodel->where('id',1)->findAll();
+
+        // echo "<pre>";
+        // print_r($settingdata);
+        // die();
 
         return view('Modules\ApplicationSetting\Views\admin\bank\application-setting', [
 
@@ -45,18 +50,33 @@ class ApplicationSettingController extends BaseController{
 
 
     public function SettingUpdate($id)
-                {
-                    $property_id = $this->session->get('rs_property_id');
-                    $validation = \Config\Services::validation();
+    {
+
+        // echo 12;
+        // print_r($id);
+        // die();
+
+        $property_id = $this->session->get('rs_property_id');
+
+        $validation = \Config\Services::validation();
 
         $rules = [
             'companyName' => 'required', 
+            'site' => 'required',
             'phone' => 'required',
-            'website' => 'required',
+            'email' => 'required',
+            'timezone' => 'required',
+            'language' => 'required',
+            'direction' => 'required',
             'address' => 'required',
-            'currency' => 'required',
             'page' => 'required',
             'type' => 'required',
+            'currency' => 'required',
+            'seperator' => 'required',
+            'logo' => 'required',
+            'logoLight' => 'required',
+            'favicon' => 'required',
+            
            
         ];
 
@@ -92,62 +112,147 @@ class ApplicationSettingController extends BaseController{
                     'status' => 'error',
                     'message' => $validation->getError('companyName') ?: '',
                 ],
-                'phone' => [
+                'site' => [
                     'status' => 'error',
                     'message' => $validation->getError('phone') ?: '',
                 ],
-                'website' => [
+                'phone' => [
                     'status' => 'error',
-                    'message' => $validation->getError('accountNumber') ?: '',
+                    'message' => $validation->getError('email') ?: '',
                 ],
-                'address' => [
+                'email' => [
                     'status' => 'error',
                     'message' => $validation->getError('address') ?: '',
                 ],
-                'currency' => [
+                'timezone' => [
                     'status' => 'error',
                     'message' => $validation->getError('currency') ?: '',
                 ],
-                'page' => [
+                'language' => [
                     'status' => 'error',
                     'message' => $validation->getError('page') ?: '',
+                ],
+                'direction' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'address' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'page' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
                 ],
                 'type' => [
                     'status' => 'error',
                     'message' => $validation->getError('type') ?: '',
                 ],
+                'code' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'seperator' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'logo' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'logoLight' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                'favicon' => [
+                    'status' => 'error',
+                    'message' => $validation->getError('type') ?: '',
+                ],
+                
             ];
             return json_encode($response);
-        }
+        }else{   
 
 
-                    $settingmodel = new SettingModel();
-                    $data = $settingmodel->find($id);
-                    // echo'<pre>';
-                    // print_r($user);
-                    // die();
                   
                     if ($this->request->getMethod() === 'post') {
+
                         $companyName = $this->request->getPost('companyName');
+                        $site = $this->request->getPost('site');
                         $phone = $this->request->getPost('phone');
-                        $website = $this->request->getPost('website');
+                        $email = $this->request->getPost('email');
+                        $timezone = $this->request->getPost('timezone');
+                        $language = $this->request->getPost('language');
+                        $direction = $this->request->getPost('direction');
                         $address = $this->request->getPost('address');
-                        $currency = $this->request->getPost('currency');
                         $page = $this->request->getPost('page');
                         $type = $this->request->getPost('type');
-                      
+                        $currency = $this->request->getPost('currency');
+                        $code = $this->request->getPost('code');
+                        $seperator = $this->request->getPost('seperator');
+                        $logo = $this->request->getFile('logo');
+                        $logoLight = $this->request->getFile('logoLight');
+                        $favicon = $this->request->getFile('favicon');
+
+                        $settingmodel = new SettingModel();
+                        $data = $settingmodel->find($id);
+                        
+                        if ($logo->isValid() && !$logo->hasMoved())
+                            {
+                                $old_photo = $data['logo'];    
+                                if(file_exists("Settingphotos/logosPhotos/".$old_photo)){
+                                    unlink("Settingphotos/logosPhotos/".$old_photo);
+                                }
+
+                                $logoName = $logo->getRandomName();
+                                $logo->move('Settingphotos/logosPhotos/', $logoName);
+                            }
+                        if ($logoLight->isValid() && !$logoLight->hasMoved())
+                            {
+                                $old_photo = $data['logoLight'];    
+                                if(file_exists("Settingphotos/logosPhotos/".$old_photo)){
+                                    unlink("Settingphotos/logosPhotos/".$old_photo);
+                                }
+
+                                $logoLightName = $logoLight->getRandomName();
+                                $logoLight->move('Settingphotos/logosPhotos/', $logoLightName);
+                            }
+
+                        if ($favicon->isValid() && !$favicon->hasMoved())
+                            {
+                                $old_photo = $data['favicon'];    
+                                if(file_exists("Settingphotos/logosPhotos/".$old_photo)){
+                                    unlink("Settingphotos/logosPhotos/".$old_photo);
+                                }
+                                $faviconName = $favicon->getRandomName();
+                                $favicon->move('Settingphotos/logosPhotos/', $faviconName);
+                            }
+
+
+
                         
                         $data = [
+
                             'company_name' => $companyName,
+                            'site' => $site,
                             'company_phone' => $phone,
-                            'web_site' => $website,
+                            'email' => $email,
+                            'timezone' => $timezone,
+                            'language' => $language,
+                            'direction' => $direction,
                             'company_address' => $address,
-                            'default_currency' => $currency,
                             'Number_of_data_per_page' => $page,
                             'registration_type' => $type,
-                            'property_id'         => $property_id
+                            'default_currency' => $currency,
+                            'code' => $code,
+                            'seperator' => $seperator,
+                            'logo' => $logoName,
+                            'logoLight' => $logoLightName,
+                            'favicon' => $faviconName,
+                            'property_id'       => $property_id
                           
                         ];
+
                         $settingmodel->update($id, $data);
 
                         $response = [
@@ -156,9 +261,12 @@ class ApplicationSettingController extends BaseController{
                         ];
                         return $this->response->setJSON($response);
                     }
-                    $data['getsetting']= $settingmodel->where('property_id',$property_id)->findall();
-                    return view('Modules\ApplicationSetting\Views\admin\bank\application-setting', $data);
                 }
+
+
+            // $data['getsetting']= $settingmodel->where('property_id',$property_id)->findall();
+            // return view('Modules\ApplicationSetting\Views\admin\bank\application-setting', $data);
+        }
 
 
 

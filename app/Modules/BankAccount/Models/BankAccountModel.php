@@ -16,5 +16,10 @@ class BankAccountModel extends Model{
         $data = ['deleted_at' => date('Y-m-d H:i:s')];
         $this->update($id, $data);
     }
+    
+    // public function abcd(){
+    // return $this->belongsTo(BankModel::class, $table);
+    // }
+
 }
 

@@ -34,19 +34,27 @@
 
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    var eventsData = <?php echo $events; ?>; 
+    var expenseData = <?php echo $events; ?>;  
+    var incomeData = <?php echo $incomeevents; ?>;  
 
-    var events = eventsData.map(function(eventData) {
-        var dateParts = eventData.date.split('/');
-        var formattedDate = dateParts[2] + '-' + dateParts[0] + '-' + dateParts[1];
+    // console.log(incomeData);
+    // return false;
 
+    // for expense data
+        var expenseEvent = expenseData.map(function(eventData) {
+          
+        var dateParts = eventData.date.split('-');
+        
+        var formattedDate = dateParts[0] + '-' + dateParts[1] + '-' + dateParts[2];
+
+        
         return {
-            title: eventData.expense_category,
+            title: eventData.categoryName,
             start: formattedDate,
             account: eventData.account,
             bank: eventData.bank,
@@ -57,11 +65,35 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    // for income data
+        var incomeEvent = incomeData.map(function(eventData) {
+           
+        var dateParts = eventData.date.split('-');
+       
+        var formattedDate = dateParts[0] + '-' + dateParts[1] + '-' + dateParts[2];
+
+       
+        return {
+            title: eventData.categoryName,
+            start: formattedDate,
+            account: eventData.account,
+            bank: eventData.bank,
+            amount: eventData.amount,
+            description: eventData.description,
+            note: eventData.note,
+            reference: eventData.reference
+        };
+    });
+
+
+        var joinevents = incomeEvent.concat(expenseEvent);
+        console.log(joinevents);
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        events: events,
-        color: '#d81f59',
-        eventColor: '#d81f59',
+        events: joinevents,
+        color: '#881fd8',
+        eventColor: '#881fd8',
         firstDay: 1,
         header: {
             left: 'prev',
@@ -71,9 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
         views: {},
         editable: true,
         selectable: true,
-        eventClick: function(info) {
+        eventClick: function(info)
+        {
             $('#createEventModal').modal('show');
-            $("#createEventModal .modal-body p").text(info.event.expense_category); 
+            $("#createEventModal .modal-body p").text(info.event.incomeCategory); 
             $("#account").text(info.event.extendedProps.account);
             $("#accountName").text(info.event.extendedProps.bank);
             $("#amount").text(info.event.extendedProps.amount);
@@ -87,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+
 });
 
 </script>
@@ -104,7 +138,8 @@ document.addEventListener('DOMContentLoaded', function() {
             editable: true,
             selectable: true,
 
-            eventClick: function(info) {
+            eventClick: function(info)
+ {
                 $('#createEventModal').modal('show');
                 $("#createEventModal .modal-body p").text(info.event.expense_category); 
                 $("#account").text(info.event.extendedProps.account);
@@ -114,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#note").text(info.event.extendedProps.note);
                 $("#Reference").text(info.event.extendedProps.reference);
                 $("#date").text(info.event.date);
-            },
+            }, 
         });
 
 

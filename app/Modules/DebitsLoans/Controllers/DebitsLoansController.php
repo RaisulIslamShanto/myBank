@@ -85,7 +85,7 @@ class DebitsLoansController extends BaseController{
             'BankAccount' => 'required',
             'Type' => 'required',
             'Person' => 'required',
-            'date' => 'required',
+            'date' => 'required|date_valid',
             'note' => 'required',  
         ];
     

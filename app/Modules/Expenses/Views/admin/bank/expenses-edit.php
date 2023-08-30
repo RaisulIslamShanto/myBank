@@ -38,7 +38,7 @@
                                 <?php foreach ($Categorytable as $cat): ?>
                                     <option value="<?= $cat['categoryId']?>"><?= $cat['categoryName']?></option>
                                 <?php endforeach; ?>
-                            </select> 
+                        </select> 
                         <span style="color:red;" id="catErr"></span>
                     </div>
 

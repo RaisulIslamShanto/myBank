@@ -175,9 +175,61 @@ $(document).ready(function() {
 </script>
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 <script>
         $(document).ready(function() {
+
+          $('#myForm').validate({
+
+                rules: {
+                            
+                            holderName: {
+                                required: true,
+                                minlength: 5
+                            },
+                            BankName: {
+                                required: true,
+                                
+                            },
+                            accountNumber: {
+                                required: true,
+                               
+                            },
+                            InitialBalance: {
+                                required: true,
+                                number:true
+                            },
+                            
+                        },
+
+                messages: {
+                            
+                            holderName: {
+                                required: "Please enter holder Name.",
+                                minlength:
+                              " Your holder Name must consist of at least 5 characters"
+                            },
+                            BankName: {
+                                required: " Please enter Bank Name.",
+                              
+                            },
+
+                            accountNumber: {
+                                required: " Please enter account Number",
+                                minlength:
+                              " Your password must be consist of at least 5 characters"
+                            },
+                            InitialBalance: {
+                                required: " Please enter Initial Balance",
+                                
+                               
+                            },
+                            
+                        }
+
+          });
+
+
 
             $("#openModalBtn").click(function() {
                 $("#myModal").modal("show");

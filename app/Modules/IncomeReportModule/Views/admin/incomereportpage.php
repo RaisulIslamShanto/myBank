@@ -17,7 +17,7 @@
             <input type="date" class="form-control" id="startdate" name="startdate" >
             <label for="floatingSelect">Start Date</label>
           </div>
-        </div>
+        </div> 
         <div class="col-md-4">
           <div class="form-floating">
             <input type="date" id="enddate" name="enddate" class="form-control">

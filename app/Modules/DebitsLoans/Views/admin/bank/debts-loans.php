@@ -29,7 +29,7 @@
             <tr>
               <td>USD <?= $value['amount']?></td>
               <td><?= $value['select_type']?></td>
-              <td><?= $value['bank']->bank_name?></td>
+              <td><?= $value['bank']->bank_name?></td> 
               <td><?= $value['person']?></td>
               <td><?= $value['date']?> </td>
               <td><?= $value['note']?></td>
@@ -156,9 +156,78 @@ $(document).ready(function() {
     });
   </script>
 
-
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 <script>
         $(document).ready(function() {
+
+            $('#myForm').validate({
+
+                rules: {
+                        
+                    amount: {
+                            required: true,
+                            number: true,
+                        },
+                        BankAccount: {
+                            required: true,
+                            
+                        },
+                        Type: {
+                            required: true,
+                            
+                        },
+                        Person: {
+                            required: true,
+                            
+                        },
+                        date: {
+                            required: true,
+                           
+                        },
+                        note: {
+                            required: true,
+                           
+                        },
+                        
+                    },
+
+                messages: {
+                        
+                        amount: {
+                            required: "Please enter holder Name.",
+                            number:
+                                " Please enter only number."
+                        },
+                        BankAccount: {
+                            required: " Please enter Bank Name.",
+                            
+                        },
+
+                        Type: {
+                            required: " Please enter account Number",
+                            
+                        },
+                        Person: {
+                            required: " Please enter Person",
+                            
+                            
+                        },
+                        date: {
+                            required: " Please enter date",
+                            
+                            
+                        },
+                        note: {
+                            required: " Please enter note",
+                            
+                            
+                        },
+                        
+                    }
+
+          });
+
+
 
             $("#openModalBtn").click(function() {
                 $("#myModal").modal("show");

@@ -212,7 +212,7 @@ class IncomeController extends BaseController{
                 'description' => 'required',
                 'note' => 'required',
                 // 'attachment' => 'required',
-                'date' => 'required',
+                'date' => 'required|date_valid',
                
             ];
     
@@ -290,7 +290,7 @@ class IncomeController extends BaseController{
                     // echo "<pre>";
                     // print_r($data);
                     // die();
-        
+         
                     $IncomeModel = new IncomeModel();
                     $IncomeModel->insert($data);
                    
@@ -377,15 +377,21 @@ class IncomeController extends BaseController{
         // $id  = $this->request->getPost('id');
         $db = \Config\Database::connect();
 
-        $CategoryModel = new CategoryModel();
+        // $CategoryModel = new CategoryModel();
 
-        $incomeCategories = $CategoryModel
-            ->like('categoryType', 'income')
-            ->findAll();
+        // $incomeCategories = $CategoryModel
+        //     ->like('categoryType', 'income')
+        //     ->findAll();
+
+        // $incomeCategories = $CategoryModel
+        //     ->where('categoryId', $id)
+        //     ->findAll();
         
-        $BankAccountModel = new BankAccountModel();
+        // $BankAccountModel = new BankAccountModel();
 
-        $bankaccountno = $BankAccountModel->findAll();
+        // $bankaccountno = $BankAccountModel->where('id', $id)->findAll();
+
+
 
 
         $query = $db->table('incometable')
@@ -396,11 +402,14 @@ class IncomeController extends BaseController{
             ->get();
         $data = $query->getResultArray();
 
+
+        
+
         $alldata =[
 
             'incomedata'=>$data,
-            'incomeCategories' => $incomeCategories,
-            'bankaccountno'=>$bankaccountno
+            // 'incomeCategories' => $incomeCategories,
+            // 'bankaccountno'=>$bankaccountno
 
         ];
 
@@ -410,61 +419,74 @@ class IncomeController extends BaseController{
 
         return json_encode($alldata);
 
-        $data['getBankAccount'] = $bankaccount->findAll();
-        return view('Modules\BankAccount\Views\admin\bank\bank-account', $data);
+        // $data['getBankAccount'] = $bankaccount->findAll();
+        // return view('Modules\BankAccount\Views\admin\bank\bank-account', $data);
 
     }
 
     public function updateincome($id)
     {
        
-     $IncomeModel = new IncomeModel;
-
-     $id = $this->request->getPost('updateincomeId');
-     $incomerow = $IncomeModel->find($id);
-     
-    //  echo print_r($id);
-    //  die();
-
-     $property_id = $this->session->get('rs_property_id');
-     
-     if ($this->request->getFile('attachment')->isValid()){
-
-        $property_id = $this->session->get('rs_property_id');
-        $attachment = $this->request->getFile('attachment');
-        $attachmentName = $attachment->getRandomName();
-        $attachment->move('Modules/IncomeModule/incomeuploads/', $attachmentName);
-
-     }
-     else{
-         $attachmentName = "no image";
-     }
-
-    $data = [
-        
-        'incomeCategory'=>$this->request->getPost('updateincomeCategory'),
-        'bankAccount'=>$this->request->getPost('updatebankAccount'),
-        'amount'=>$this->request->getPost('amount'),
-        'reference'=>$this->request->getPost('reference'),
-        'description'=>$this->request->getPost('description'),
-        'note'=>$this->request->getPost('note'),
-        'attachment'=>$attachmentName,
-        'date'=>$this->request->getPost('date'),
-        'property_id'  => $property_id
-       ];
-    
-    //    echo print_r($data);
-    //    die();
-
-        $IncomeModel->update($id,$data);
-
+        $IncomeModel = new IncomeModel;
+        //  $expensesmodel = new ExpensesModel();
         
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Form updated successfully.']);
-        
-    //    return redirect()->to('admin/incomepage')->with('status', 'success');
+        //  $id = $this->request->getPost('updateincomeId');
 
-        // return view('variantcategory/variantcategory',['banktable'=>$banktable]);
+        //  var_dump($id);
+        //  print_r($id);
+        //  die();
+        //  $incomelist = $IncomeModel->find([$id]);
+
+        //  $incomerow = $IncomeModel->find($id);
+        
+        //  echo print_r($id);
+        //  die();
+
+        //  $property_id = $this->session->get('rs_property_id');
+        
+        //  if ($this->request->getFile('attachment')->isValid()){
+
+        //     $property_id = $this->session->get('rs_property_id');
+        //     $attachment = $this->request->getFile('attachment');
+        //     $attachmentName = $attachment->getRandomName();
+        //     $attachment->move('Modules/IncomeModule/incomeuploads/', $attachmentName);
+
+        //  }
+        //  else{
+        //      $attachmentName = "no image";
+        //  }
+
+        $data = [
+            
+            'incomeCategory'=>$this->request->getPost('updateincomeCategory'),
+            'bankAccount'=>$this->request->getPost('updatebankAccount'),
+            'amount'=>$this->request->getPost('amount'),
+            'reference'=>$this->request->getPost('reference'),
+            'description'=>$this->request->getPost('description'),
+            'note'=>$this->request->getPost('note'),
+            // 'attachment'=>$attachmentName,
+            'date'=>$this->request->getPost('date'),
+            // 'property_id'  => $property_id
+        ];
+        
+        //    echo print_r($data);
+        //    die();
+
+            $IncomeModel->update($id,$data);
+            
+            $response = [
+                'success' => true,
+                'message' => 'Data updated successfully.'
+            ];
+            return $this->response->setJSON($response);
+
+        
+            // return $this->response->setJSON(['status' => 'success', 'message' => 'Form updated successfully.']);
+            
+        //    return redirect()->to('admin/incomepage')->with('status', 'success');
+
+            // return view('variantcategory/variantcategory',['banktable'=>$banktable]);
 
     }
     
